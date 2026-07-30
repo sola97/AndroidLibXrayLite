@@ -35,7 +35,7 @@ const (
 	xudpBaseKey          = "xray.xudp.basekey"
 	tunFdKey             = "xray.tun.fd"
 	browserDialerAddress = "xray.browser.dialer"
-	libVersion           = 38 // Library version, update here only
+	libVersion           = 39 // Library version, update here only
 )
 
 // CoreController represents a controller for managing Xray core instance lifecycle
