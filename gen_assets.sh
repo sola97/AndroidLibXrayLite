@@ -14,8 +14,30 @@ DATADIR="${__dir}/data"
 
 # Check for required dependencies
 check_dependencies() {
+    command -v curl >/dev/null 2>&1 || { echo >&2 "curl is required but it's not installed. Aborting."; exit 1; }
     command -v jq >/dev/null 2>&1 || { echo >&2 "jq is required but it's not installed. Aborting."; exit 1; }
     command -v go >/dev/null 2>&1 || { echo >&2 "Go is required but it's not installed. Aborting."; exit 1; }
+}
+
+
+download_file() {
+    local url="$1"
+    local target="$2"
+    local temporary="${target}.download"
+
+    curl \
+        --fail \
+        --silent \
+        --show-error \
+        --location \
+        --retry 6 \
+        --retry-all-errors \
+        --retry-delay 2 \
+        --connect-timeout 30 \
+        "$url" \
+        --output "$temporary"
+    test -s "$temporary"
+    mv "$temporary" "$target"
 }
 
 
@@ -27,13 +49,19 @@ download_dat() {
     fi
 
     echo "Downloading geoip.dat..."
-    curl -sL https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat -o "$DATADIR/geoip.dat"
+    download_file \
+        "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat" \
+        "$DATADIR/geoip.dat"
 
     echo "Downloading geosite.dat..."
-    curl -sL https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat -o "$DATADIR/geosite.dat"
+    download_file \
+        "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat" \
+        "$DATADIR/geosite.dat"
 
     echo "Downloading geoip-only-cn-private.dat..."
-    curl -sL https://raw.githubusercontent.com/Loyalsoldier/geoip/release/geoip-only-cn-private.dat -o "$DATADIR/geoip-only-cn-private.dat"
+    download_file \
+        "https://raw.githubusercontent.com/Loyalsoldier/geoip/release/geoip-only-cn-private.dat" \
+        "$DATADIR/geoip-only-cn-private.dat"
 }
 
 # Main execution logic
