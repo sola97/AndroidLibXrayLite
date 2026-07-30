@@ -1,7 +1,6 @@
 package libv2ray
 
 import (
-	_ "github.com/sagernet/cronet-go/all"
 	"github.com/xtls/xray-core/proxy/naive"
 )
 

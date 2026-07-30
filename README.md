@@ -12,8 +12,10 @@
 3. `go mod tidy -v`
 4. `gomobile bind -v -androidapi 24 -trimpath -ldflags='-s -w -buildid= -checklinkname=0' ./`
 
-The native Naive outbound links the prebuilt Android Cronet libraries from
-`github.com/sagernet/cronet-go/all`; building Chromium is not required.
+The native Naive outbound imports the four Android Cronet platform modules
+behind architecture build tags. gomobile therefore links only the matching
+Android static library instead of resolving the non-Android libraries included
+by `cronet-go/all`; building Chromium is not required.
 
 Call `CoreController.NotifyNetworkChanged()` after Android changes its active
 network. The method closes pooled Naive connections without restarting Xray,
